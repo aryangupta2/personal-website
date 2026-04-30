@@ -11,8 +11,25 @@ import "../styles/global.css";
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="generator" content={Astro.generator} />
 		<title>Aryan Gupta</title>
+		<script is:inline>
+			const storedTheme = localStorage.getItem("theme");
+			const preferredDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+			if (storedTheme === "dark" || (!storedTheme && preferredDark)) {
+				document.documentElement.classList.add("dark");
+			}
+		</script>
 	</head>
 	<body>
 		<slot />
+		<script is:inline>
+			const button = document.querySelector("#theme-toggle");
+			if (button) {
+				button.addEventListener("click", () => {
+					const html = document.documentElement;
+					html.classList.toggle("dark");
+					localStorage.setItem("theme", html.classList.contains("dark") ? "dark" : "light");
+				});
+			}
+		</script>
 	</body>
 </html>
