@@ -1,5 +1,12 @@
 ---
 import "../styles/global.css";
+
+interface Props {
+	mainClass?: string;
+}
+
+const { mainClass = "mx-auto flex min-h-screen w-full max-w-3xl flex-col px-6 py-8 sm:px-10" } =
+	Astro.props;
 ---
 
 <!doctype html>
@@ -20,7 +27,9 @@ import "../styles/global.css";
 		</script>
 	</head>
 	<body>
-		<slot />
+		<main class={mainClass}>
+			<slot />
+		</main>
 		<script is:inline>
 			const buttons = document.querySelectorAll("#theme-toggle");
 			const syncThemeIcons = () => {
