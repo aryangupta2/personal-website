@@ -1,9 +1,26 @@
-<section class="max-w-2xl">
+---
+import profilePicture from "../assets/profile_picture.JPG";
+---
+
+<section class="max-w-xl">
+  <button
+    type="button"
+    data-profile-open
+    aria-label="Open profile picture fullscreen"
+    class="mb-5 block rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-500"
+  >
+    <img
+      src={profilePicture.src}
+      alt="Aryan Gupta profile picture"
+      class="h-36 w-36 rounded-full border border-neutral-300 object-cover object-center p-0.5 transition-transform hover:scale-[1.02] dark:border-neutral-700 sm:h-40 sm:w-40"
+      loading="eager"
+    />
+  </button>
   <h1 class="mb-3 text-3xl font-normal tracking-tight sm:text-4xl">Aryan Gupta</h1>
-  <p class="mb-4 max-w-xl text-base leading-relaxed text-neutral-700">
+  <p class="mb-4 max-w-lg text-base leading-relaxed text-neutral-700">
     Software Developer
   </p>
-  <p class="mb-8 max-w-xl text-sm leading-relaxed text-neutral-600">
+  <p class="mb-8 max-w-lg text-sm leading-relaxed text-neutral-600">
     I focus on fast interfaces, automating where possible, and clear user experiences from idea to shipping.
   </p>
 </section>
