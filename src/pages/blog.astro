@@ -10,8 +10,13 @@ const posts = (await getCollection("blog")).sort(
 <Layout>
   <main class="mx-auto min-h-screen w-full max-w-4xl px-6 py-8 sm:px-10">
     <header class="mb-14 flex items-center justify-between text-sm">
-      <a href="/">Home</a>
-      <span>Blog</span>
+      <div class="flex items-center gap-4">
+        <a href="/">Home</a>
+        <span>Blog</span>
+      </div>
+      <button id="theme-toggle" type="button" class="rounded border border-neutral-300 px-2 py-1 text-xs">
+        Theme
+      </button>
     </header>
 
     <h1 class="mb-8 text-3xl font-normal tracking-tight">Blog</h1>
