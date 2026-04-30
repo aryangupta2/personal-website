@@ -22,14 +22,27 @@ import "../styles/global.css";
 	<body>
 		<slot />
 		<script is:inline>
-			const button = document.querySelector("#theme-toggle");
-			if (button) {
+			const buttons = document.querySelectorAll("#theme-toggle");
+			const syncThemeIcons = () => {
+				const isDark = document.documentElement.classList.contains("dark");
+				document.querySelectorAll("[data-theme-icon-light]").forEach((icon) => {
+					icon.classList.toggle("hidden", isDark);
+				});
+				document.querySelectorAll("[data-theme-icon-dark]").forEach((icon) => {
+					icon.classList.toggle("hidden", !isDark);
+				});
+			};
+
+			syncThemeIcons();
+
+			buttons.forEach((button) => {
 				button.addEventListener("click", () => {
 					const html = document.documentElement;
 					html.classList.toggle("dark");
 					localStorage.setItem("theme", html.classList.contains("dark") ? "dark" : "light");
+					syncThemeIcons();
 				});
-			}
+			});
 		</script>
 	</body>
 </html>
