@@ -29,8 +29,11 @@ const { mainClass = "mx-auto flex min-h-screen w-full max-w-3xl flex-col px-6 py
 		</script>
 	</head>
 	<body>
-		<main class={mainClass}>
+		<main class={`${mainClass} flex flex-col`}>
 			<slot />
+			<footer class="mt-auto pt-12 text-xs text-neutral-500">
+				<p>© {new Date().getFullYear()} Aryan Gupta. All rights reserved.</p>
+			</footer>
 		</main>
 		<script is:inline>
 			const syncThemeIcons = () => {
