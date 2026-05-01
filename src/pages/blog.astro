@@ -1,35 +1,17 @@
 ---
-import { getCollection } from "astro:content";
 import Layout from "../layouts/Layout.astro";
 import HomeHeader from "../components/HomeHeader.astro";
-
-const posts = (await getCollection("blog")).sort(
-  (a, b) => b.data.publishDate.getTime() - a.data.publishDate.getTime()
-);
 ---
 
 <Layout mainClass="mx-auto min-h-screen w-full max-w-3xl px-6 py-8 sm:px-10">
-    <HomeHeader />
+  <HomeHeader />
 
-    <h1 class="mb-8 text-3xl font-normal tracking-tight">Blog</h1>
+  <h1 class="mb-8 text-3xl font-normal tracking-tight">Blog</h1>
 
-    <ul class="space-y-5 text-sm">
-      {
-        posts.map((post) => (
-          <li class="border-border border-b pb-4">
-            <article>
-              <h2 class="mb-1 text-base font-normal">{post.data.title}</h2>
-              <p class="text-muted mb-2">{post.data.description}</p>
-              <time class="text-muted text-xs" datetime={post.data.publishDate.toISOString()}>
-                {post.data.publishDate.toLocaleDateString("en-US", {
-                  month: "short",
-                  day: "numeric",
-                  year: "numeric",
-                })}
-              </time>
-            </article>
-          </li>
-        ))
-      }
-    </ul>
+  <section class="border-border border-t pt-10" aria-label="Blog status">
+    <p class="text-muted max-w-xl text-sm leading-relaxed">
+      This space is still taking shape. Longer notes on engineering, small tools, and lessons from shipping
+      things will show up here when they are ready :)
+    </p>
+  </section>
 </Layout>
