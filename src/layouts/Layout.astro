@@ -21,11 +21,24 @@ const { mainClass = "mx-auto flex min-h-screen w-full max-w-3xl flex-col px-6 py
 		<title>Aryan Gupta</title>
 		<ClientRouter />
 		<script is:inline>
-			const storedTheme = localStorage.getItem("theme");
-			const preferredDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-			if (storedTheme === "dark" || (!storedTheme && preferredDark)) {
-				document.documentElement.classList.add("dark");
+			function applyStoredTheme() {
+				const stored = localStorage.getItem("theme");
+				const html = document.documentElement;
+				if (stored === "dark") {
+					html.classList.add("dark");
+				} else if (stored === "light") {
+					html.classList.remove("dark");
+				} else {
+					if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+						html.classList.add("dark");
+					} else {
+						html.classList.remove("dark");
+					}
+				}
 			}
+			applyStoredTheme();
+			document.addEventListener("astro:page-load", applyStoredTheme);
+			document.addEventListener("astro:after-swap", applyStoredTheme);
 		</script>
 	</head>
 	<body>
