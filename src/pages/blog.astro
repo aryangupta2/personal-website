@@ -16,11 +16,11 @@ const posts = (await getCollection("blog")).sort(
     <ul class="space-y-5 text-sm">
       {
         posts.map((post) => (
-          <li class="border-b border-neutral-200 pb-4">
+          <li class="border-border border-b pb-4">
             <article>
               <h2 class="mb-1 text-base font-normal">{post.data.title}</h2>
-              <p class="mb-2 text-neutral-600">{post.data.description}</p>
-              <time class="text-xs text-neutral-500" datetime={post.data.publishDate.toISOString()}>
+              <p class="text-muted mb-2">{post.data.description}</p>
+              <time class="text-muted text-xs" datetime={post.data.publishDate.toISOString()}>
                 {post.data.publishDate.toLocaleDateString("en-US", {
                   month: "short",
                   day: "numeric",
