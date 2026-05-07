@@ -3,76 +3,80 @@ import "../styles/global.css";
 import { ClientRouter } from "astro:transitions";
 
 interface Props {
-	mainClass?: string;
+  mainClass?: string;
 }
 
-const { mainClass = "mx-auto flex min-h-screen w-full max-w-3xl flex-col px-6 py-8 sm:px-10" } =
-	Astro.props;
+const {
+  mainClass = "mx-auto flex min-h-screen w-full max-w-3xl flex-col px-6 py-8 sm:px-10",
+} = Astro.props;
 ---
 
 <!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Aryan Gupta</title>
-		<ClientRouter />
-		<script is:inline>
-			function applyStoredTheme() {
-				const stored = localStorage.getItem("theme");
-				const html = document.documentElement;
-				if (stored === "dark") {
-					html.classList.add("dark");
-				} else if (stored === "light") {
-					html.classList.remove("dark");
-				} else {
-					if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-						html.classList.add("dark");
-					} else {
-						html.classList.remove("dark");
-					}
-				}
-			}
-			applyStoredTheme();
-			document.addEventListener("astro:page-load", applyStoredTheme);
-			document.addEventListener("astro:after-swap", applyStoredTheme);
-		</script>
-	</head>
-	<body>
-		<main class={`${mainClass} flex flex-col`}>
-			<slot />
-			<footer class="text-subtle mt-auto pt-12 text-xs">
-				<p>© {new Date().getFullYear()} Aryan Gupta. All rights reserved.</p>
-			</footer>
-		</main>
-		<script is:inline>
-			const syncThemeIcons = () => {
-				const isDark = document.documentElement.classList.contains("dark");
-				document.querySelectorAll("[data-theme-icon-light]").forEach((icon) => {
-					icon.classList.toggle("hidden", isDark);
-				});
-				document.querySelectorAll("[data-theme-icon-dark]").forEach((icon) => {
-					icon.classList.toggle("hidden", !isDark);
-				});
-			};
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Aryan Gupta</title>
+    <ClientRouter />
+    <script is:inline>
+      function applyStoredTheme() {
+        const stored = localStorage.getItem("theme");
+        const html = document.documentElement;
+        if (stored === "dark") {
+          html.classList.add("dark");
+        } else if (stored === "light") {
+          html.classList.remove("dark");
+        } else {
+          if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+            html.classList.add("dark");
+          } else {
+            html.classList.remove("dark");
+          }
+        }
+      }
+      applyStoredTheme();
+      document.addEventListener("astro:page-load", applyStoredTheme);
+      document.addEventListener("astro:after-swap", applyStoredTheme);
+    </script>
+  </head>
+  <body>
+    <main class={`${mainClass} flex flex-col`}>
+      <slot />
+      <footer class="text-subtle mt-auto pt-12 text-xs">
+        <p>© {new Date().getFullYear()} Aryan Gupta. All rights reserved.</p>
+      </footer>
+    </main>
+    <script is:inline>
+      const syncThemeIcons = () => {
+        const isDark = document.documentElement.classList.contains("dark");
+        document.querySelectorAll("[data-theme-icon-light]").forEach((icon) => {
+          icon.classList.toggle("hidden", isDark);
+        });
+        document.querySelectorAll("[data-theme-icon-dark]").forEach((icon) => {
+          icon.classList.toggle("hidden", !isDark);
+        });
+      };
 
-			const bindThemeToggle = () => {
-				syncThemeIcons();
-				document.querySelectorAll("#theme-toggle").forEach((button) => {
-					button.onclick = () => {
-						const html = document.documentElement;
-						html.classList.toggle("dark");
-						localStorage.setItem("theme", html.classList.contains("dark") ? "dark" : "light");
-						syncThemeIcons();
-					};
-				});
-			};
+      const bindThemeToggle = () => {
+        syncThemeIcons();
+        document.querySelectorAll("#theme-toggle").forEach((button) => {
+          button.onclick = () => {
+            const html = document.documentElement;
+            html.classList.toggle("dark");
+            localStorage.setItem(
+              "theme",
+              html.classList.contains("dark") ? "dark" : "light",
+            );
+            syncThemeIcons();
+          };
+        });
+      };
 
-			bindThemeToggle();
-			document.addEventListener("astro:page-load", bindThemeToggle);
-		</script>
-	</body>
+      bindThemeToggle();
+      document.addEventListener("astro:page-load", bindThemeToggle);
+    </script>
+  </body>
 </html>
