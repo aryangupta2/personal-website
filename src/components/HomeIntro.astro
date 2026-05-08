@@ -93,46 +93,65 @@ import profilePicture from "../assets/profile_picture.JPG";
 </section>
 
 <script>
-  const openButton = document.querySelector("[data-profile-open]");
-  const modal = document.querySelector("[data-profile-modal]");
-  const closeButton = modal?.querySelector("[data-profile-close]");
-  let previousFocus = null;
+  let cleanupProfileZoom = () => {};
 
-  const detachEscapeClose = () => {
-    document.removeEventListener("keydown", onEscapeKey);
-  };
+  function bindProfileZoom() {
+    cleanupProfileZoom();
 
-  const closeModal = () => {
-    if (!modal || !openButton) return;
-    detachEscapeClose();
-    modal.classList.add("hidden");
-    document.body.classList.remove("overflow-hidden");
-    openButton.setAttribute("aria-expanded", "false");
-    previousFocus?.focus();
-  };
+    const openButton = document.querySelector("[data-profile-open]");
+    const modal = document.querySelector("[data-profile-modal]");
+    const closeButton = modal?.querySelector("[data-profile-close]");
+    if (!openButton || !modal || !closeButton) {
+      cleanupProfileZoom = () => {};
+      return;
+    }
 
-  /** Only active while modal is visible */
-  function onEscapeKey(event) {
-    if (event.key !== "Escape") return;
-    event.preventDefault();
-    closeModal();
+    const controller = new AbortController();
+    const { signal } = controller;
+    let previousFocus = null;
+
+    const closeModal = () => {
+      modal.classList.add("hidden");
+      document.body.classList.remove("overflow-hidden");
+      openButton.setAttribute("aria-expanded", "false");
+      previousFocus?.focus();
+    };
+
+    const openModal = () => {
+      previousFocus = document.activeElement;
+      modal.classList.remove("hidden");
+      document.body.classList.add("overflow-hidden");
+      openButton.setAttribute("aria-expanded", "true");
+      closeButton.focus();
+    };
+
+    openButton.addEventListener("click", openModal, { signal });
+    closeButton.addEventListener("click", closeModal, { signal });
+    modal.addEventListener(
+      "click",
+      (event) => {
+        if (event.target !== modal) return;
+        closeModal();
+      },
+      { signal },
+    );
+
+    document.addEventListener(
+      "keydown",
+      (event) => {
+        if (event.key !== "Escape") return;
+        if (modal.classList.contains("hidden")) return;
+        event.preventDefault();
+        closeModal();
+      },
+      { signal },
+    );
+
+    cleanupProfileZoom = () => {
+      controller.abort();
+    };
   }
 
-  const openModal = () => {
-    if (!modal || !openButton || !closeButton) return;
-    previousFocus = document.activeElement;
-    modal.classList.remove("hidden");
-    document.body.classList.add("overflow-hidden");
-    openButton.setAttribute("aria-expanded", "true");
-    document.addEventListener("keydown", onEscapeKey);
-    closeButton.focus();
-  };
-
-  openButton?.addEventListener("click", openModal);
-  closeButton?.addEventListener("click", closeModal);
-
-  modal?.addEventListener("click", (event) => {
-    if (event.target !== modal) return;
-    closeModal();
-  });
+  bindProfileZoom();
+  document.addEventListener("astro:page-load", bindProfileZoom);
 </script>
