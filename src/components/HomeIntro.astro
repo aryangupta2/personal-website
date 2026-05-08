@@ -6,6 +6,8 @@ import profilePicture from "../assets/profile_picture.JPG";
   <button
     type="button"
     data-profile-open
+    aria-haspopup="dialog"
+    aria-expanded="false"
     aria-label="Open profile picture fullscreen"
     class="mb-5 block rounded-full focus-visible:ring-2 focus-visible:ring-zinc-500 focus-visible:outline-none dark:focus-visible:ring-zinc-400"
   >
@@ -16,6 +18,50 @@ import profilePicture from "../assets/profile_picture.JPG";
       loading="eager"
     />
   </button>
+  <div
+    data-profile-modal
+    class="fixed inset-0 z-50 hidden items-center justify-center bg-black/75 p-3 sm:p-4"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Zoomed profile picture"
+  >
+    <figure class="mx-auto flex w-fit max-w-[92vw] flex-col items-center">
+      <div class="relative inline-block">
+        <img
+          data-profile-zoom-image
+          src={profilePicture.src}
+          alt="Aryan Gupta profile picture enlarged"
+          class="block h-auto max-h-[74vh] w-auto max-w-[92vw] rounded-2xl border border-white/20 object-contain shadow-2xl sm:max-h-[82vh] sm:max-w-[85vw]"
+          loading="lazy"
+        />
+        <button
+          type="button"
+          data-profile-close
+          aria-label="Close profile picture zoom"
+          class="absolute right-2 top-2 rounded-full border border-white/35 bg-black/55 p-2 text-white backdrop-blur-sm transition hover:bg-black/70 focus-visible:ring-2 focus-visible:ring-white focus-visible:outline-none sm:right-3 sm:top-3 sm:p-2.5"
+        >
+          <span class="sr-only">Close</span>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="size-4 sm:size-5"
+            aria-hidden="true"
+          >
+            <path d="M18 6 6 18"></path>
+            <path d="m6 6 12 12"></path>
+          </svg>
+        </button>
+      </div>
+      <figcaption class="mt-2 text-center text-xs text-white/85 sm:mt-3 sm:text-sm">
+        that time I went to lisbon
+      </figcaption>
+    </figure>
+  </div>
   <h1 class="mb-3 text-3xl font-normal tracking-tight sm:text-4xl">
     Aryan Gupta
   </h1>
@@ -29,3 +75,59 @@ import profilePicture from "../assets/profile_picture.JPG";
     Always looking to chat! Feel free to reach out at my socials below :)
   </p>
 </section>
+
+<script>
+  const openButton = document.querySelector("[data-profile-open]");
+  const modal = document.querySelector("[data-profile-modal]");
+  const closeButton = modal?.querySelector("[data-profile-close]");
+  const modalImage = modal?.querySelector("[data-profile-zoom-image]");
+  let previousFocus = null;
+
+  const closeModal = () => {
+    if (!modal || !openButton) return;
+    modal.classList.add("hidden");
+    document.body.classList.remove("overflow-hidden");
+    openButton.setAttribute("aria-expanded", "false");
+    previousFocus?.focus();
+  };
+
+  const openModal = () => {
+    if (!modal || !openButton || !closeButton) return;
+    previousFocus = document.activeElement;
+    modal.classList.remove("hidden");
+    document.body.classList.add("overflow-hidden");
+    openButton.setAttribute("aria-expanded", "true");
+    closeButton.focus();
+  };
+
+  const isModalOpen = () => Boolean(modal && !modal.classList.contains("hidden"));
+
+  openButton?.addEventListener("click", openModal);
+  closeButton?.addEventListener("click", (event) => {
+    event.stopPropagation();
+    closeModal();
+  });
+
+  modal?.addEventListener("click", (event) => {
+    const target = event.target;
+    if (!(target instanceof HTMLElement) || target === modal) {
+      closeModal();
+    }
+  });
+
+  modalImage?.addEventListener("click", (event) => {
+    event.stopPropagation();
+  });
+
+  document.addEventListener(
+    "keydown",
+    (event) => {
+      if (!isModalOpen()) return;
+      if (event.key !== "Escape") return;
+      event.preventDefault();
+      event.stopPropagation();
+      closeModal();
+    },
+    true,
+  );
+</script>
