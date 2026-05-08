@@ -1,4 +1,5 @@
 ---
+import { Image } from "astro:assets";
 import profilePicture from "../assets/profile_picture.JPG";
 ---
 
@@ -11,34 +12,45 @@ import profilePicture from "../assets/profile_picture.JPG";
     aria-label="Open profile picture fullscreen"
     class="mb-5 block rounded-full focus-visible:ring-2 focus-visible:ring-zinc-500 focus-visible:outline-none dark:focus-visible:ring-zinc-400"
   >
-    <img
-      src={profilePicture.src}
+    <Image
+      src={profilePicture}
       alt="Aryan Gupta profile picture"
-      class="border-border h-36 w-36 rounded-full border object-cover object-center p-0.5 hover:scale-[1.02] sm:h-40 sm:w-40"
+      width={profilePicture.width}
+      height={profilePicture.height}
+      sizes="160px"
+      densities={[1.5, 2]}
       loading="eager"
+      fetchpriority="high"
+      decoding="async"
+      class="border-border h-36 w-36 rounded-full border object-cover object-center p-0.5 hover:scale-[1.02] sm:h-40 sm:w-40"
     />
   </button>
   <div
     data-profile-modal
-    class="fixed inset-0 z-50 hidden items-center justify-center bg-black/75 p-3 sm:p-4"
+    class="fixed inset-0 z-50 hidden items-center justify-center bg-black/92 p-4 backdrop-blur-sm"
     role="dialog"
     aria-modal="true"
     aria-label="Zoomed profile picture"
   >
-    <figure class="mx-auto flex w-fit max-w-[92vw] flex-col items-center">
-      <div class="relative inline-block">
-        <img
-          data-profile-zoom-image
-          src={profilePicture.src}
+    <figure
+      class="relative z-[1] mx-auto flex w-fit max-w-[92vw] flex-col items-center"
+    >
+      <div class="relative inline-block max-w-full">
+        <Image
+          src={profilePicture}
           alt="Aryan Gupta profile picture enlarged"
-          class="block h-auto max-h-[74vh] w-auto max-w-[92vw] rounded-2xl border border-white/20 object-contain shadow-2xl sm:max-h-[82vh] sm:max-w-[85vw]"
+          width={profilePicture.width}
+          height={profilePicture.height}
+          sizes="(max-width: 640px) 92vw, 85vw"
           loading="lazy"
+          decoding="async"
+          class="block h-auto max-h-[74vh] w-auto max-w-[92vw] rounded-2xl border border-white/20 object-contain shadow-2xl sm:max-h-[82vh] sm:max-w-[85vw]"
         />
         <button
           type="button"
           data-profile-close
           aria-label="Close profile picture zoom"
-          class="absolute right-2 top-2 rounded-full border border-white/35 bg-black/55 p-2 text-white backdrop-blur-sm transition hover:bg-black/70 focus-visible:ring-2 focus-visible:ring-white focus-visible:outline-none sm:right-3 sm:top-3 sm:p-2.5"
+          class="absolute top-2 right-2 rounded-full border border-white/35 bg-black/55 p-2 text-white backdrop-blur-sm transition hover:bg-black/70 focus-visible:ring-2 focus-visible:ring-white focus-visible:outline-none sm:top-3 sm:right-3 sm:p-2.5"
         >
           <span class="sr-only">Close</span>
           <svg
@@ -57,7 +69,9 @@ import profilePicture from "../assets/profile_picture.JPG";
           </svg>
         </button>
       </div>
-      <figcaption class="mt-2 text-center text-xs text-white/85 sm:mt-3 sm:text-sm">
+      <figcaption
+        class="mt-2 max-w-full px-1 text-center text-xs leading-snug text-white/90 sm:mt-3 sm:text-sm"
+      >
         that time I went to lisbon
       </figcaption>
     </figure>
@@ -80,16 +94,27 @@ import profilePicture from "../assets/profile_picture.JPG";
   const openButton = document.querySelector("[data-profile-open]");
   const modal = document.querySelector("[data-profile-modal]");
   const closeButton = modal?.querySelector("[data-profile-close]");
-  const modalImage = modal?.querySelector("[data-profile-zoom-image]");
   let previousFocus = null;
+
+  const detachEscapeClose = () => {
+    document.removeEventListener("keydown", onEscapeKey);
+  };
 
   const closeModal = () => {
     if (!modal || !openButton) return;
+    detachEscapeClose();
     modal.classList.add("hidden");
     document.body.classList.remove("overflow-hidden");
     openButton.setAttribute("aria-expanded", "false");
     previousFocus?.focus();
   };
+
+  /** Only active while modal is visible */
+  function onEscapeKey(event) {
+    if (event.key !== "Escape") return;
+    event.preventDefault();
+    closeModal();
+  }
 
   const openModal = () => {
     if (!modal || !openButton || !closeButton) return;
@@ -97,37 +122,15 @@ import profilePicture from "../assets/profile_picture.JPG";
     modal.classList.remove("hidden");
     document.body.classList.add("overflow-hidden");
     openButton.setAttribute("aria-expanded", "true");
+    document.addEventListener("keydown", onEscapeKey);
     closeButton.focus();
   };
 
-  const isModalOpen = () => Boolean(modal && !modal.classList.contains("hidden"));
-
   openButton?.addEventListener("click", openModal);
-  closeButton?.addEventListener("click", (event) => {
-    event.stopPropagation();
-    closeModal();
-  });
+  closeButton?.addEventListener("click", closeModal);
 
   modal?.addEventListener("click", (event) => {
-    const target = event.target;
-    if (!(target instanceof HTMLElement) || target === modal) {
-      closeModal();
-    }
+    if (event.target !== modal) return;
+    closeModal();
   });
-
-  modalImage?.addEventListener("click", (event) => {
-    event.stopPropagation();
-  });
-
-  document.addEventListener(
-    "keydown",
-    (event) => {
-      if (!isModalOpen()) return;
-      if (event.key !== "Escape") return;
-      event.preventDefault();
-      event.stopPropagation();
-      closeModal();
-    },
-    true,
-  );
 </script>
