@@ -1,6 +1,7 @@
 ---
 import "../styles/global.css";
 import { ClientRouter } from "astro:transitions";
+import { withBase } from "../utils/withBase";
 
 interface Props {
   mainClass?: string;
@@ -11,8 +12,6 @@ const {
 } = Astro.props;
 
 const baseUrl = import.meta.env.BASE_URL;
-const withBase = (path = "") =>
-  `${baseUrl}${path.startsWith("/") ? path.slice(1) : path}`;
 ---
 
 <!doctype html>
@@ -32,84 +31,84 @@ const withBase = (path = "") =>
     <link
       rel="apple-touch-icon"
       sizes="57x57"
-      href={withBase("apple-icon-57x57.png")}
+      href={withBase(baseUrl, "apple-icon-57x57.png")}
     />
     <link
       rel="apple-touch-icon"
       sizes="60x60"
-      href={withBase("apple-icon-60x60.png")}
+      href={withBase(baseUrl, "apple-icon-60x60.png")}
     />
     <link
       rel="apple-touch-icon"
       sizes="72x72"
-      href={withBase("apple-icon-72x72.png")}
+      href={withBase(baseUrl, "apple-icon-72x72.png")}
     />
     <link
       rel="apple-touch-icon"
       sizes="76x76"
-      href={withBase("apple-icon-76x76.png")}
+      href={withBase(baseUrl, "apple-icon-76x76.png")}
     />
     <link
       rel="apple-touch-icon"
       sizes="114x114"
-      href={withBase("apple-icon-114x114.png")}
+      href={withBase(baseUrl, "apple-icon-114x114.png")}
     />
     <link
       rel="apple-touch-icon"
       sizes="120x120"
-      href={withBase("apple-icon-120x120.png")}
+      href={withBase(baseUrl, "apple-icon-120x120.png")}
     />
     <link
       rel="apple-touch-icon"
       sizes="144x144"
-      href={withBase("apple-icon-144x144.png")}
+      href={withBase(baseUrl, "apple-icon-144x144.png")}
     />
     <link
       rel="apple-touch-icon"
       sizes="152x152"
-      href={withBase("apple-icon-152x152.png")}
+      href={withBase(baseUrl, "apple-icon-152x152.png")}
     />
     <link
       rel="apple-touch-icon"
       sizes="180x180"
-      href={withBase("apple-icon-180x180.png")}
+      href={withBase(baseUrl, "apple-icon-180x180.png")}
     />
     <link
       rel="icon"
       type="image/png"
       sizes="192x192"
-      href={withBase("android-icon-192x192.png")}
+      href={withBase(baseUrl, "android-icon-192x192.png")}
     />
-    <link rel="icon" href={withBase("favicon.ico")} />
+    <link rel="icon" href={withBase(baseUrl, "favicon.ico")} />
     <link
       rel="icon"
       type="image/png"
       sizes="32x32"
-      href={withBase("favicon-32x32.png")}
+      href={withBase(baseUrl, "favicon-32x32.png")}
     />
     <link
       rel="icon"
       type="image/png"
       sizes="48x48"
-      href={withBase("favicon-48x48.png")}
+      href={withBase(baseUrl, "favicon-48x48.png")}
     />
     <link
       rel="icon"
       type="image/png"
       sizes="96x96"
-      href={withBase("favicon-96x96.png")}
+      href={withBase(baseUrl, "favicon-96x96.png")}
     />
     <link
       rel="icon"
       type="image/png"
       sizes="16x16"
-      href={withBase("favicon-16x16.png")}
+      href={withBase(baseUrl, "favicon-16x16.png")}
     />
-    <link rel="manifest" href={withBase("manifest.json")} />
+    <link rel="manifest" href={withBase(baseUrl, "manifest.json")} />
     <meta name="msapplication-TileColor" content="#ffffff" />
     <meta
       name="msapplication-TileImage"
-      content={withBase("ms-icon-144x144.png")}
+      content={withBase(baseUrl, "ms-icon-144x144.png")}
     />
     <meta name="theme-color" content="#ffffff" />
     <meta name="generator" content={Astro.generator} />
