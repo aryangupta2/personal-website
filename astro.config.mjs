@@ -4,6 +4,8 @@ import tailwindcss from "@tailwindcss/vite";
 
 // https://astro.build/config
 export default defineConfig({
+  site: "https://aryangupta2.github.io",
+  base: "/personal-website",
   integrations: [],
   server: {
     port: 3000,
